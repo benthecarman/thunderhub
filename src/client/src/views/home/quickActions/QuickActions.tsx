@@ -20,7 +20,6 @@ import { SupportBar } from './donate/DonateContent';
 import { OpenChannel } from './openChannel';
 import { LnUrlCard } from './lnurl';
 import { LnMarketsCard } from './lnmarkets';
-import { AmbossCard } from './amboss/AmbossCard';
 import { LightningAddressCard } from './lightningAddress/LightningAddress';
 
 export const QuickCard = styled.div`
@@ -105,7 +104,6 @@ export const QuickActions = () => {
         return (
           <QuickRow>
             <SupportCard callback={() => setOpenCard('support')} />
-            <AmbossCard />
             <QuickCard onClick={() => setOpenCard('lightning_address')}>
               <Zap size={24} />
               <QuickTitle>Address</QuickTitle>

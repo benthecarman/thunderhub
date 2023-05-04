@@ -40,7 +40,7 @@ export class FetchService {
     data: any;
     error: undefined | GraphQLError;
   }> {
-    const needsHeaders = url === this.configService.get('urls.amboss');
+    const needsHeaders = false;
     return this.fetchWithProxy(url, {
       method: 'post',
       headers: {

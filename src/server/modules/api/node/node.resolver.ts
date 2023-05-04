@@ -15,7 +15,6 @@ import { Logger } from 'winston';
 import { toWithError } from 'src/server/utils/async';
 import { FetchService } from '../../fetch/fetch.service';
 import { ConfigService } from '@nestjs/config';
-import { gql } from 'graphql-tag';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {
@@ -146,20 +145,6 @@ export class NodeFieldResolver {
     if (!publicKey) {
       this.logger.error('No public key to get node');
       return null;
-    }
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      gql`
-        query GetNodeAlias($pubkey: String!) {
-          getNodeAlias(pubkey: $pubkey)
-        }
-      `,
-      { pubkey: publicKey }
-    );
-
-    if (data?.getNodeAlias && !error) {
-      return { alias: data.getNodeAlias, public_key: publicKey };
     }
 
     const [info, nodeError] = await toWithError(

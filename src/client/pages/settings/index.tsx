@@ -12,7 +12,6 @@ import { PrivacySettings } from '../../src/views/settings/Privacy';
 import { Security } from '../../src/views/settings/Security';
 import { NetworkInfo } from '../../src/views/home/networkInfo/NetworkInfo';
 import { NotificationSettings } from '../../src/views/settings/Notifications';
-import { AmbossSettings } from '../../src/views/settings/Amboss';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -28,7 +27,6 @@ const SettingsView = () => {
     <>
       <InterfaceSettings />
       <NotificationSettings />
-      <AmbossSettings />
       <Security />
       <DashboardSettings />
       <PrivacySettings />

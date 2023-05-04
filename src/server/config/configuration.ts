@@ -14,7 +14,6 @@ type Throttler = {
 
 type Urls = {
   mempool: string;
-  amboss: string;
   tbase: string;
   ticker: string;
   fees: string;
@@ -45,11 +44,6 @@ type SubscriptionsConfig = {
   disableBackups: boolean;
 };
 
-type AmbossConfig = {
-  disableHealthCheckPings: boolean;
-  disableBalancePushes: boolean;
-};
-
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -68,7 +62,6 @@ type ConfigType = {
   disable2FA: boolean;
   headers: Headers;
   subscriptions: SubscriptionsConfig;
-  amboss: AmbossConfig;
 };
 
 export default (): ConfigType => {
@@ -86,7 +79,6 @@ export default (): ConfigType => {
 
   const urls: Urls = {
     mempool,
-    amboss: 'https://api.amboss.space/graphql',
     fees: `${mempool}/api/v1/fees/recommended`,
     tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
@@ -131,11 +123,6 @@ export default (): ConfigType => {
     disableBackups: process.env.DISABLE_BACKUP_SUB === 'true',
   };
 
-  const amboss = {
-    disableHealthCheckPings: process.env.DISABLE_HEALTHCHECK_PINGS === 'true',
-    disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
-  };
-
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
@@ -154,7 +141,6 @@ export default (): ConfigType => {
     jwtSecret,
     yamlEnvs,
     subscriptions,
-    amboss,
   };
 
   if (!isProduction) {

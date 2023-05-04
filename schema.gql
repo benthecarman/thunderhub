@@ -2,17 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AmbossSubscription {
-  end_date: String!
-  subscribed: Boolean!
-  upgradable: Boolean!
-}
-
-type AmbossUser {
-  backups: UserBackupInfo!
-  subscription: AmbossSubscription!
-}
-
 type AuthResponse {
   message: String!
   status: String!
@@ -443,7 +432,6 @@ type Mutation {
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
   lnUrlPay(amount: Float!, callback: String!, comment: String): PaySuccess!
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
-  loginAmboss: Boolean!
   logout: Boolean!
   openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
@@ -671,8 +659,6 @@ type Query {
   decodeRequest(request: String!): DecodeInvoice!
   getAccount: ServerAccount!
   getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
-  getAmbossLoginToken: String!
-  getAmbossUser: AmbossUser
   getBackups: String!
   getBaseCanConnect: Boolean!
   getBaseNodes: [BaseNode!]!

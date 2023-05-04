@@ -4,7 +4,6 @@ import {
   getWalletInfo,
   subscribeToChannels,
   subscribeToInvoices,
-  subscribeToBackups,
   subscribeToPastPayments,
 } from 'lightning';
 import { auto, each, map, forever } from 'async';
@@ -14,9 +13,7 @@ import { AccountsService } from '../accounts/accounts.service';
 import { WsService } from '../ws/ws.service';
 import { ConfigService } from '@nestjs/config';
 import { NodeService } from '../node/node.service';
-import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
-import { AmbossService } from '../api/amboss/amboss.service';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -33,12 +30,10 @@ export class SubService implements OnApplicationBootstrap {
   retryCount = 0;
 
   constructor(
-    private ambossService: AmbossService,
     private accountsService: AccountsService,
     private wsService: WsService,
     private configService: ConfigService,
     private nodeService: NodeService,
-    private userConfigService: UserConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -348,93 +343,6 @@ export class SubService implements OnApplicationBootstrap {
                         'ErrorInChannelSubscribe',
                         { node: node.name, err },
                       ]);
-                    });
-                  },
-                  callback
-                );
-              },
-            ],
-
-            // // Subscribe to node backups
-            backups: [
-              'checkAvailable',
-              ({ checkAvailable }, callback) => {
-                const disabled = this.configService.get(
-                  'subscriptions.disableBackups'
-                );
-                if (disabled) {
-                  this.logger.info('Backup subscriptions are disabled');
-                  return;
-                }
-
-                const names = checkAvailable.map(a => a.name);
-
-                this.logger.info('Backup subscription', {
-                  connections: names.join(', '),
-                });
-
-                return each(
-                  checkAvailable,
-                  (node, cbk) => {
-                    let postBackupTimeoutHandle;
-                    const sub = subscribeToBackups({ lnd: node.lnd });
-
-                    this.subscriptions.push(sub);
-
-                    sub.on('backup', ({ backup }) => {
-                      if (!!postBackupTimeoutHandle) {
-                        clearTimeout(postBackupTimeoutHandle);
-                      }
-
-                      const { backupsEnabled } =
-                        this.userConfigService.getConfig();
-
-                      if (!backupsEnabled) {
-                        this.logger.info('ignoring backup', {
-                          node: node.name,
-                        });
-
-                        return;
-                      }
-
-                      postBackupTimeoutHandle = setTimeout(async () => {
-                        const isProduction =
-                          this.configService.get('isProduction');
-
-                        if (!isProduction) {
-                          this.logger.info(
-                            'Backups are only sent in production',
-                            { node: node.name }
-                          );
-                          return;
-                        }
-
-                        if (node.network !== 'btc') {
-                          this.logger.info(
-                            'Backups are only sent for mainnet',
-                            { node: node.name }
-                          );
-                          return;
-                        }
-
-                        this.logger.info('backup', {
-                          node: node.name,
-                        });
-
-                        const { signature } =
-                          await this.nodeService.signMessage(node.id, backup);
-
-                        await this.ambossService.pushBackup(backup, signature);
-                      }, restartSubscriptionTimeMs);
-
-                      return;
-                    });
-
-                    sub.on('error', async err => {
-                      sub.removeAllListeners();
-
-                      this.logger.error(`ErrorInBackupSubscribe: ${node.name}`);
-                      cbk(['ErrorInBackupSubscribe', { node: node.name, err }]);
                     });
                   },
                   callback

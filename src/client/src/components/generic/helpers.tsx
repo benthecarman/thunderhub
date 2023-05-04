@@ -115,7 +115,7 @@ export const getNodeLink = (
   if (!publicKey || (alias && alias === 'Node not found')) {
     return 'Node not found';
   }
-  const link = `https://amboss.space/node/${publicKey}`;
+  const link = `https://mempool.space/lightning/node/${publicKey}`;
   const text = alias ? alias : shorten(publicKey);
   return (
     <>
@@ -132,7 +132,7 @@ export const getNodeLink = (
 };
 
 export const getChannelLink = (id: string) => {
-  const link = `https://amboss.space/edge/${id}`;
+  const link = `https://mempool.space/lightning/channel/${id}`;
   return (
     <>
       {disableLinks ? (

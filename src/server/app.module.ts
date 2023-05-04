@@ -28,7 +28,6 @@ export type ContextType = {
   authToken?: JwtObjectType;
   lnMarketsAuth: string | null;
   tokenAuth: string | null;
-  ambossAuth: string | null;
 };
 
 export type JwtObjectType = {
@@ -75,14 +74,12 @@ export type JwtObjectType = {
 
           const lnMarketsAuth = cookies[appConstants.lnMarketsAuth];
           const tokenAuth = cookies[appConstants.tokenCookieName];
-          const ambossAuth = cookies[appConstants.ambossCookieName];
 
           const context = {
             req,
             res,
             lnMarketsAuth,
             tokenAuth,
-            ambossAuth,
           };
 
           if (!token) return context;

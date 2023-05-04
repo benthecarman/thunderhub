@@ -18,19 +18,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type AmbossSubscription = {
-  __typename?: 'AmbossSubscription';
-  end_date: Scalars['String'];
-  subscribed: Scalars['Boolean'];
-  upgradable: Scalars['Boolean'];
-};
-
-export type AmbossUser = {
-  __typename?: 'AmbossUser';
-  backups: UserBackupInfo;
-  subscription: AmbossSubscription;
-};
-
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   message: Scalars['String'];
@@ -507,7 +494,6 @@ export type Mutation = {
   lnUrlChannel: Scalars['String'];
   lnUrlPay: PaySuccess;
   lnUrlWithdraw: Scalars['String'];
-  loginAmboss: Scalars['Boolean'];
   logout: Scalars['Boolean'];
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean'];
@@ -932,8 +918,6 @@ export type Query = {
   decodeRequest: DecodeInvoice;
   getAccount: ServerAccount;
   getAccountingReport: Scalars['String'];
-  getAmbossLoginToken: Scalars['String'];
-  getAmbossUser?: Maybe<AmbossUser>;
   getBackups: Scalars['String'];
   getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<BaseNode>;
